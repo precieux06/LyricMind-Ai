@@ -1,4 +1,4 @@
-```
+
 # 🎵 LyricMindAI
 
 *LyricMindAI* est une application web qui génère des paroles de chanson à partir d’un thème ou d’une phrase saisie par l’utilisateur. L’idée est de combiner l’intelligence artificielle à la créativité musicale, accessible gratuitement.
@@ -19,7 +19,7 @@
 
 ## 📁 Structure du projet
 
-```
+
 LyricMindAi/
 ├── app.py                 # Application Flask
 ├── templates/
