@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+    <title>LyricMindAI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <div class="container">
+        <h1>LyricMindAI</h1>
+        <p>Générateur de paroles de chanson</p>
+        
+        <textarea id="prompt" placeholder="Écris ton thème ici..."></textarea>
+        <button id="generateBtn">Générer</button>
+        
+        <h2>Paroles générées :</h2>
+        <pre id="result"></pre>
+    </div>
+
+    <script>
+        document.getElementById('generateBtn').addEventListener('click', () => {
+            const prompt = document.getElementById('prompt').value;
+            fetch('/generate', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({prompt})
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('result').textContent = data.lyrics;
+            })
+            .catch(err => {
+                alert('Erreur serveur');
+                console.error(err);
+            });
+        });
+    </script>
+</body>
+  </html>
