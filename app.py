@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os
 
 app = Flask(__name__)
-app.secret_key = 'ta_cle_secrete_pour_session'  # Change ça!
+app.secret_key = 'lyricmind_dev_key'  # Change ça!
 
 DB_NAME = 'users.db'
 
