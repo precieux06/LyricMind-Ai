@@ -29,7 +29,6 @@ LyricMindAi/
 ├── requirements.txt       # Dépendances Python
 ├── render.yaml            # Config pour Render
 └── README.md              # Documentation
-```
 
 ---
 
