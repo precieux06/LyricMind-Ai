@@ -1,22 +1,17 @@
-Python
-_pycache_/
+# Fichiers Python compilés
+__pycache__/
 *.pyc
-*.pyo
-*.pyd
-env/
-venv/
-ENV/
-*.env
 
-Byte-compiled / optimized / DLL files
-*.py[cod]
-*$py.class
+# Base de données locale
+users.db
 
-VSCode
-.vscode/
-
-MacOS
-.DS_Store
-
-Logs
+# Fichiers de logs (si tu en ajoutes plus tard)
 *.log
+
+# Environnement virtuel (si utilisé en local)
+venv/
+.env
+
+# Fichiers spécifiques à Replit (optionnel)
+.replit
+replit.nix
