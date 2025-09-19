@@ -1,11 +1,11 @@
-from flask import Flask, request, redirect, url_for, session, render_template_string, flash, jsonify
+from flask import Flask, request, redirect, url_for, session, render_template, flash
 import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from dotenv import load_dotenv
 from openai import OpenAI
 
-# Charger variables d'environnement (.env)
+# Charger variables d'environnement
 load_dotenv()
 
 app = Flask(__name__)
@@ -36,18 +36,10 @@ init_db()
 
 
 # --- ROUTES ---
-
 @app.route("/")
 def index():
     if "user_id" in session:
-        return render_template_string(
-            """
-            <h1>Bienvenue {{ nom }} !</h1>
-            <p><a href="{{ url_for('logout') }}">Déconnexion</a></p>
-            <p><a href="{{ url_for('studio') }}">🎵 Générer ton clip</a></p>
-        """,
-            nom=session.get("user_nom"),
-        )
+        return render_template("index.html", nom=session.get("user_nom"))
     return redirect(url_for("login"))
 
 
@@ -73,23 +65,7 @@ def register():
         except sqlite3.IntegrityError:
             flash("Cet email est déjà utilisé.", "error")
 
-    return render_template_string(
-        """
-        <h2>Inscription</h2>
-        {% with messages = get_flashed_messages(with_categories=true) %}
-          {% for category, message in messages %}
-            <p style="color: {% if category=='error' %}red{% else %}green{% endif %};">{{ message }}</p>
-          {% endfor %}
-        {% endwith %}
-        <form method="post">
-            Nom: <input type="text" name="nom" required><br>
-            Email: <input type="email" name="email" required><br>
-            Mot de passe: <input type="password" name="password" required><br>
-            <button type="submit">S'inscrire</button>
-        </form>
-        <p>Déjà inscrit ? <a href="{{ url_for('login') }}">Connectez-vous ici</a></p>
-    """
-    )
+    return render_template("register.html")
 
 
 # --- CONNEXION ---
@@ -111,22 +87,7 @@ def login():
         else:
             flash("Email ou mot de passe incorrect.", "error")
 
-    return render_template_string(
-        """
-        <h2>Connexion</h2>
-        {% with messages = get_flashed_messages(with_categories=true) %}
-          {% for category, message in messages %}
-            <p style="color: red;">{{ message }}</p>
-          {% endfor %}
-        {% endwith %}
-        <form method="post">
-            Email: <input type="email" name="email" required><br>
-            Mot de passe: <input type="password" name="password" required><br>
-            <button type="submit">Se connecter</button>
-        </form>
-        <p>Pas encore inscrit ? <a href="{{ url_for('register') }}">Inscrivez-vous ici</a></p>
-    """
-    )
+    return render_template("login.html")
 
 
 # --- DECONNEXION ---
@@ -146,7 +107,7 @@ def studio():
     if request.method == "POST":
         prompt = request.form["prompt"]
 
-        # Appel API OpenAI pour générer un script/clip style Suno
+        # Appel API OpenAI pour générer un clip/texte créatif
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
@@ -158,24 +119,9 @@ def studio():
 
         result = response.choices[0].message.content
 
-    return render_template_string(
-        """
-        <h2>🎶 Studio de création</h2>
-        <form method="post">
-            <textarea name="prompt" rows="4" cols="50" placeholder="Décris ton idée de clip..."></textarea><br>
-            <button type="submit">Générer 🎵</button>
-        </form>
-
-        {% if result %}
-            <h3>Résultat :</h3>
-            <pre>{{ result }}</pre>
-        {% endif %}
-        <p><a href="{{ url_for('index') }}">Retour</a></p>
-    """,
-        result=result,
-    )
+    return render_template("studio.html", result=result)
 
 
+# --- MAIN ---
 if __name__ == "__main__":
-    # debug=True uniquement en local
     app.run(debug=True)
